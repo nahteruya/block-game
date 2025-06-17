@@ -1,15 +1,16 @@
 type PieceLineProps = {
   setDragOffset: (offset: number) => void;
+  onDragStart: () => void; // ✅ Nova prop
 };
 
-const PieceLine = ({ setDragOffset }: PieceLineProps) => {
+const PieceLine = ({ setDragOffset, onDragStart }: PieceLineProps) => {
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     const blockSize = 32 + 4; // largura do bloco (Tailwind: w-8 = 32px) + gap
     const offsetX = e.nativeEvent.offsetX;
     const blockIndex = Math.floor(offsetX / blockSize);
 
     setDragOffset(blockIndex);
-    e.dataTransfer.setData('pieceType', 'line');
+    onDragStart(); // ✅ Chamar callback para informar o tipo
   };
 
   return (
