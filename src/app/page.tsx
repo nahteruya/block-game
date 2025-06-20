@@ -7,6 +7,7 @@ import { getPieceIndices, isOutOfBounds } from "@/pieces/utils";
 import type{ PieceName } from "@/pieces/types";
 import PieceRightHook from "@/components/Piece/PieceRightHook";
 import PieceLeftHook from "@/components/Piece/PieceLeftHook";
+import PieceTee from "@/components/Piece/PieceTee";
 
 export default function Home() {
   const [board, setBoard] = useState(Array(100).fill(null));
@@ -91,6 +92,8 @@ export default function Home() {
         return 'bg-green-200';
       case 'red':
         return 'bg-red-200';
+      case 'purple':
+        return 'bg-purple-200';
       // adicione outros casos conforme necessário
       default:
         return 'bg-gray-700';
@@ -111,6 +114,8 @@ export default function Home() {
               ? 'bg-teal-500'
               : cell === 'left-hook'
               ? 'bg-red-500'
+              : cell === 'tee'
+              ? 'bg-purple-500'
               : getHoverColor(index);
           return (
             <div
@@ -128,6 +133,7 @@ export default function Home() {
         <PieceSquare setDragOffset={setDragOffset} onDragStart={() => handleDragStart('square')} />
         <PieceRightHook setDragOffset={setDragOffset} onDragStart={() => handleDragStart('right-hook')} />
         <PieceLeftHook setDragOffset={setDragOffset} onDragStart={() => handleDragStart('left-hook')} />
+        <PieceTee setDragOffset={setDragOffset} onDragStart={() => handleDragStart('tee')} />
       </div>
     </main>
   );

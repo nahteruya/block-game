@@ -37,6 +37,15 @@ export const PIECE_DEFINITIONS: Record<PieceName, PieceDefinition> = {
     ],
     width: 2,
     height: 3,
+  },
+  "tee": {
+    name: 'tee',
+    color: 'purple',
+    shape: [
+      [0, 1], [1, 0], [1, 1], [1, 2]
+    ],
+    width: 3,
+    height: 2,
   }
   // Adicione outras peças aqui (T, L, Z, etc.)
 };
