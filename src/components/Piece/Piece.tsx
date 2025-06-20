@@ -15,6 +15,7 @@ const mapColor: Record<PieceColor, string> = {
   red: 'bg-red-500',
   purple: 'bg-purple-500',
   indigo: 'bg-indigo-500',
+  pink: 'bg-pink-500',
 }
 
 const Piece = ({ piece, setDragOffset, onDragStart }: PieceProps) => {

@@ -9,6 +9,7 @@ import PieceRightHook from "@/components/Piece/PieceRightHook";
 import PieceLeftHook from "@/components/Piece/PieceLeftHook";
 import PieceTee from "@/components/Piece/PieceTee";
 import PieceRightCurve from "@/components/Piece/PieceRightCurve";
+import PieceLeftCurve from "@/components/Piece/PieceLeftCurve";
 
 export default function Home() {
   const [board, setBoard] = useState(Array(100).fill(null));
@@ -97,6 +98,8 @@ export default function Home() {
         return 'bg-purple-200';
       case 'indigo':
         return 'bg-indigo-200';
+      case 'pink':
+        return 'bg-pink-200';
       // adicione outros casos conforme necessário
       default:
         return 'bg-gray-700';
@@ -121,6 +124,8 @@ export default function Home() {
               ? 'bg-purple-500'
               : cell === 'right-curve'
               ? 'bg-indigo-500'
+              : cell === 'left-curve'
+              ? 'bg-pink-500'
               : getHoverColor(index);
           return (
             <div
@@ -140,6 +145,7 @@ export default function Home() {
         <PieceLeftHook setDragOffset={setDragOffset} onDragStart={() => handleDragStart('left-hook')} />
         <PieceTee setDragOffset={setDragOffset} onDragStart={() => handleDragStart('tee')} />
         <PieceRightCurve setDragOffset={setDragOffset} onDragStart={() => handleDragStart('right-curve')} />
+        <PieceLeftCurve setDragOffset={setDragOffset} onDragStart={() => handleDragStart('left-curve')} />
       </div>
     </main>
   );

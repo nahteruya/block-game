@@ -55,6 +55,15 @@ export const PIECE_DEFINITIONS: Record<PieceName, PieceDefinition> = {
     ],
     width: 3,
     height: 2,
+  },
+  "left-curve": {
+    name: 'left-curve',
+    color: 'pink',
+    shape: [
+      [0, 1], [0, 2], [1, 0], [1, 1]
+    ],
+    width: 3,
+    height: 2,
   }
   // Adicione outras peças aqui (T, L, Z, etc.)
 };
