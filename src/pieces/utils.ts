@@ -1,5 +1,5 @@
 // src/pieces/utils.ts
-import { PieceDefinition } from './types';
+import type { PieceDefinition } from './types';
 
 export function getPieceIndices(
   baseIndex: number,

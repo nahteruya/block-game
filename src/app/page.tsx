@@ -4,15 +4,17 @@ import PieceLine from "@/components/Piece/PieceLine";
 import PieceSquare from "@/components/Piece/PieceSquare";
 import { PIECE_DEFINITIONS } from "@/pieces/definitions";
 import { getPieceIndices, isOutOfBounds } from "@/pieces/utils";
+import type{ PieceName } from "@/pieces/types";
+import PieceRightHook from "@/components/Piece/PieceRightHook";
 
 export default function Home() {
   const [board, setBoard] = useState(Array(100).fill(null));
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<number>(0);
-  const [hoverPieceType, setHoverPieceType] = useState<string | null>(null);
-  const [currentDragType, setCurrentDragType] = useState<string | null>(null);
+  const [hoverPieceType, setHoverPieceType] = useState<PieceName | null>(null);
+  const [currentDragType, setCurrentDragType] = useState<PieceName | null>(null);
 
-  const handleDragStart = (pieceType: string) => setCurrentDragType(pieceType);
+  const handleDragStart = (pieceType: PieceName) => setCurrentDragType(pieceType);
 
   const handleDragEnd = () => {
     setCurrentDragType(null);
@@ -77,12 +79,18 @@ export default function Home() {
     }
     if (outOfBounds || hasCollision) return 'bg-red-300';
     // Cores por tipo
-    return piece.color === 'blue'
-      ? 'bg-blue-300'
-      : piece.color === 'yellow'
-      ? 'bg-yellow-200'
-      : 'bg-gray-700';
-  };
+    switch (piece.color) {
+      case 'blue':
+        return 'bg-blue-300';
+      case 'yellow':
+        return 'bg-yellow-200';
+      case 'teal':
+        return 'bg-teal-200';
+      // adicione outros casos conforme necessário
+      default:
+        return 'bg-gray-700';
+    }
+  }
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center">
@@ -94,6 +102,8 @@ export default function Home() {
               ? 'bg-blue-600'
               : cell === 'square'
               ? 'bg-yellow-500'
+              : cell === 'right-hook'
+              ? 'bg-teal-500'
               : getHoverColor(index);
           return (
             <div
@@ -109,6 +119,7 @@ export default function Home() {
       <div className="flex h-30 w-full items-center justify-center mt-4">
         <PieceLine setDragOffset={setDragOffset} onDragStart={() => handleDragStart('line')} />
         <PieceSquare setDragOffset={setDragOffset} onDragStart={() => handleDragStart('square')} />
+        <PieceRightHook setDragOffset={setDragOffset} onDragStart={() => handleDragStart('right-hook')} />
       </div>
     </main>
   );

@@ -10,6 +10,7 @@ type PieceProps = {
 const mapColor: Record<PieceColor, string> = {
   blue: 'bg-blue-500',
   yellow: 'bg-yellow-500',
+  teal: 'bg-teal-500',
 }
 
 const Piece = ({ piece, setDragOffset, onDragStart }: PieceProps) => {
@@ -19,23 +20,36 @@ const Piece = ({ piece, setDragOffset, onDragStart }: PieceProps) => {
     const offsetY = e.nativeEvent.offsetY;
     const col = Math.floor(offsetX / blockSize);
     const row = Math.floor(offsetY / blockSize);
-    const blockIndex = row * piece.width + col;
-    setDragOffset(blockIndex);
+    const boardWidth = 10;
+    const dragOffsetValue = row * boardWidth + col;
+    setDragOffset(dragOffsetValue);
     onDragStart();
   };
 
+  const gridColsClass = {
+    1: "grid-cols-1",
+    2: "grid-cols-2",
+    3: "grid-cols-3",
+    4: "grid-cols-4",
+  }[piece.width];
+
   return (
     <div
-      className={`grid grid-cols-${piece.width} gap-1 p-2 cursor-grab`}
+      className={`grid ${gridColsClass} gap-1 p-2 cursor-grab`}
       draggable
       onDragStart={handleDragStart}
     >
-      {Array.from({ length: piece.shape.length }).map((_, idx) => (
-        <div
-          key={idx}
-          className={`w-8 h-8 ${mapColor[piece.color]} rounded-sm`}
-        />
-      ))}
+      {Array.from({ length: piece.height }).map((_, row) =>
+        Array.from({ length: piece.width }).map((_, col) => {
+          const isBlock = piece.shape.some(([dy, dx]) => dy === row && dx === col);
+          return (
+            <div
+              key={`${row}-${col}`}
+              className={`w-8 h-8 rounded-sm ${isBlock ? mapColor[piece.color] : 'bg-transparent'}`}
+            />
+          );
+        })
+      )}
     </div>
   );
 };

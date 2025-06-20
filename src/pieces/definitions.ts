@@ -1,7 +1,7 @@
 // src/pieces/definitions.ts
-import { PieceDefinition } from './types';
+import type { PieceDefinition, PieceName } from './types';
 
-export const PIECE_DEFINITIONS: Record<string, PieceDefinition> = {
+export const PIECE_DEFINITIONS: Record<PieceName, PieceDefinition> = {
   line: {
     name: 'line',
     color: 'blue',
@@ -20,5 +20,14 @@ export const PIECE_DEFINITIONS: Record<string, PieceDefinition> = {
     width: 2,
     height: 2,
   },
+  "right-hook": {
+    name: 'right-hook',
+    color: 'teal',
+    shape: [
+      [0, 0], [1, 0], [2, 0], [2, 1]
+    ],
+    width: 2,
+    height: 3,
+  }
   // Adicione outras peças aqui (T, L, Z, etc.)
 };
