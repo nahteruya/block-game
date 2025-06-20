@@ -1,5 +1,5 @@
-export type PieceName = 'line' | 'square' | 'right-hook';
-export type PieceColor = 'blue' | 'yellow' | 'teal';
+export type PieceName = 'line' | 'square' | 'right-hook' | 'left-hook';
+export type PieceColor = 'blue' | 'yellow' | 'teal' | 'green' | 'red';
 export type PieceDefinition = {
   name: PieceName;
   color: PieceColor;

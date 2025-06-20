@@ -28,6 +28,15 @@ export const PIECE_DEFINITIONS: Record<PieceName, PieceDefinition> = {
     ],
     width: 2,
     height: 3,
+  },
+  "left-hook": {
+    name: 'left-hook',
+    color: 'red',
+    shape: [
+      [0, 1], [1, 1], [2, 0], [2, 1]
+    ],
+    width: 2,
+    height: 3,
   }
   // Adicione outras peças aqui (T, L, Z, etc.)
 };
