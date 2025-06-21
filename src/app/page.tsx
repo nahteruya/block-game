@@ -11,12 +11,30 @@ import PieceTee from "@/components/Piece/PieceTee";
 import PieceRightCurve from "@/components/Piece/PieceRightCurve";
 import PieceLeftCurve from "@/components/Piece/PieceLeftCurve";
 
+// Array com todos os tipos de peças disponíveis
+const ALL_PIECE_TYPES: PieceName[] = [
+  'line',
+  'square',
+  'right-hook',
+  'left-hook',
+  'tee',
+  'right-curve',
+  'left-curve'
+];
+
+// Função para gerar 3 peças aleatórias
+const generateRandomPieces = (): PieceName[] => {
+  const shuffled = [...ALL_PIECE_TYPES].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 3);
+};
+
 export default function Home() {
   const [board, setBoard] = useState(Array(100).fill(null));
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [dragOffset, setDragOffset] = useState<number>(0);
   const [hoverPieceType, setHoverPieceType] = useState<PieceName | null>(null);
   const [currentDragType, setCurrentDragType] = useState<PieceName | null>(null);
+  const [availablePieces, setAvailablePieces] = useState<PieceName[]>(generateRandomPieces());
 
   const handleDragStart = (pieceType: PieceName) => setCurrentDragType(pieceType);
 
@@ -43,13 +61,28 @@ export default function Home() {
       return;
     }
 
+    // Adiciona a peça ao tabuleiro
     const newBoard = [...board];
     pieceIndices.forEach(i => { newBoard[i] = pieceType; });
     
+    // Verifica e remove linhas/colunas completas
     const updatedBoard = checkAndRemoveCompletedLines(newBoard, 10, 10);
     
     setBoard(updatedBoard);
     handleDragEnd();
+    
+    // Substitui a peça usada por uma nova peça aleatória
+    const newPieces = [...availablePieces];
+    const usedPieceIndex = newPieces.indexOf(pieceType);
+    if (usedPieceIndex !== -1) {
+      // Gera uma nova peça que não está nas peças atuais
+      const availableNewPieces = ALL_PIECE_TYPES.filter(type => !newPieces.includes(type));
+      if (availableNewPieces.length > 0) {
+        const randomNewPiece = availableNewPieces[Math.floor(Math.random() * availableNewPieces.length)];
+        newPieces[usedPieceIndex] = randomNewPiece;
+        setAvailablePieces(newPieces);
+      }
+    }
   };
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
@@ -109,6 +142,33 @@ export default function Home() {
     }
   }
 
+  // Função para renderizar uma peça baseada no tipo
+  const renderPiece = (pieceType: PieceName) => {
+    const props = {
+      setDragOffset,
+      onDragStart: () => handleDragStart(pieceType)
+    };
+
+    switch (pieceType) {
+      case 'line':
+        return <PieceLine key={pieceType} {...props} />;
+      case 'square':
+        return <PieceSquare key={pieceType} {...props} />;
+      case 'right-hook':
+        return <PieceRightHook key={pieceType} {...props} />;
+      case 'left-hook':
+        return <PieceLeftHook key={pieceType} {...props} />;
+      case 'tee':
+        return <PieceTee key={pieceType} {...props} />;
+      case 'right-curve':
+        return <PieceRightCurve key={pieceType} {...props} />;
+      case 'left-curve':
+        return <PieceLeftCurve key={pieceType} {...props} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8">Tetris</h1>
@@ -141,14 +201,14 @@ export default function Home() {
           );
         })}
       </div>
-      <div className="flex h-30 w-full items-center justify-center mt-4">
-        <PieceLine setDragOffset={setDragOffset} onDragStart={() => handleDragStart('line')} />
-        <PieceSquare setDragOffset={setDragOffset} onDragStart={() => handleDragStart('square')} />
-        <PieceRightHook setDragOffset={setDragOffset} onDragStart={() => handleDragStart('right-hook')} />
-        <PieceLeftHook setDragOffset={setDragOffset} onDragStart={() => handleDragStart('left-hook')} />
-        <PieceTee setDragOffset={setDragOffset} onDragStart={() => handleDragStart('tee')} />
-        <PieceRightCurve setDragOffset={setDragOffset} onDragStart={() => handleDragStart('right-curve')} />
-        <PieceLeftCurve setDragOffset={setDragOffset} onDragStart={() => handleDragStart('left-curve')} />
+      <div className="flex flex-col items-center mt-4">
+        <div className="flex h-30 w-full items-center justify-center mb-4 gap-4">
+          {availablePieces.map(pieceType => (
+            <div key={pieceType} className="w-40 h-40 flex items-center justify-center">
+              {renderPiece(pieceType)}
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
