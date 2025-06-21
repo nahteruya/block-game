@@ -3,7 +3,7 @@ import { useState } from "react";
 import PieceLine from "@/components/Piece/PieceLine";
 import PieceSquare from "@/components/Piece/PieceSquare";
 import { PIECE_DEFINITIONS } from "@/pieces/definitions";
-import { getPieceIndices, isOutOfBounds } from "@/pieces/utils";
+import { getPieceIndices, isOutOfBounds, checkAndRemoveCompletedLines } from "@/pieces/utils";
 import type{ PieceName } from "@/pieces/types";
 import PieceRightHook from "@/components/Piece/PieceRightHook";
 import PieceLeftHook from "@/components/Piece/PieceLeftHook";
@@ -45,7 +45,10 @@ export default function Home() {
 
     const newBoard = [...board];
     pieceIndices.forEach(i => { newBoard[i] = pieceType; });
-    setBoard(newBoard);
+    
+    const updatedBoard = checkAndRemoveCompletedLines(newBoard, 10, 10);
+    
+    setBoard(updatedBoard);
     handleDragEnd();
   };
 
