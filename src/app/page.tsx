@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PieceLine from "@/components/Piece/PieceLine";
 import PieceSquare from "@/components/Piece/PieceSquare";
 import { PIECE_DEFINITIONS } from "@/pieces/definitions";
@@ -34,7 +34,11 @@ export default function Home() {
   const [dragOffset, setDragOffset] = useState<number>(0);
   const [hoverPieceType, setHoverPieceType] = useState<PieceName | null>(null);
   const [currentDragType, setCurrentDragType] = useState<PieceName | null>(null);
-  const [availablePieces, setAvailablePieces] = useState<PieceName[]>(generateRandomPieces());
+  const [availablePieces, setAvailablePieces] = useState<PieceName[]>([]);
+
+  useEffect(() => {
+    setAvailablePieces(generateRandomPieces());
+  }, []);
 
   const handleDragStart = (pieceType: PieceName) => setCurrentDragType(pieceType);
 
@@ -203,11 +207,15 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center mt-4">
         <div className="flex h-30 w-full items-center justify-center mb-4 gap-4">
-          {availablePieces.map(pieceType => (
-            <div key={pieceType} className="w-40 h-40 flex items-center justify-center">
-              {renderPiece(pieceType)}
-            </div>
-          ))}
+          {availablePieces.length === 0 ? (
+            <div>Carregando...</div>
+          ) : (
+            availablePieces.map(pieceType => (
+              <div key={pieceType} className="w-40 h-40 flex items-center justify-center">
+                {renderPiece(pieceType)}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </main>
