@@ -1,8 +1,9 @@
 // src/components/Piece/Piece.tsx
-import type { PieceColor, PieceDefinition } from '@/pieces/types';
+import type { PieceColor, PieceDefinition, PieceName } from '@/pieces/types';
+import { PIECE_DEFINITIONS } from '@/pieces/definitions';
 
 type PieceProps = {
-  piece: PieceDefinition;
+  pieceName: PieceName;
   setDragOffset: (offset: number) => void;
   onDragStart: () => void;
 };
@@ -18,7 +19,13 @@ const mapColor: Record<PieceColor, string> = {
   pink: 'bg-pink-500',
 }
 
-const Piece = ({ piece, setDragOffset, onDragStart }: PieceProps) => {
+const Piece = ({ pieceName, setDragOffset, onDragStart }: PieceProps) => {
+  const piece = PIECE_DEFINITIONS[pieceName];
+  
+  if (!piece) {
+    return null;
+  }
+
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     const blockSize = 32 + 4;
     const offsetX = e.nativeEvent.offsetX;

@@ -1,8 +1,14 @@
 import Piece from './Piece';
-import { PIECE_DEFINITIONS } from '@/pieces/definitions';
+import type { PieceName } from '@/pieces/types';
 
-const PieceLeftCurve = (props: { setDragOffset: (offset: number) => void; onDragStart: () => void }) => (
-  <Piece piece={PIECE_DEFINITIONS["left-curve"]} {...props} />
+type PieceLeftCurveProps = {
+  pieceName: PieceName;
+  setDragOffset: (offset: number) => void;
+  onDragStart: () => void;
+};
+
+const PieceLeftCurve = ({ pieceName, ...props }: PieceLeftCurveProps) => (
+  <Piece pieceName={pieceName} {...props} />
 );
 
 export default PieceLeftCurve; 

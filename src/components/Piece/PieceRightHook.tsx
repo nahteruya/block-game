@@ -1,9 +1,15 @@
-// src/components/Piece/PieceL.tsx
+// src/components/Piece/PieceRightHook.tsx
 import Piece from './Piece';
-import { PIECE_DEFINITIONS } from '@/pieces/definitions';
+import type { PieceName } from '@/pieces/types';
 
-const PieceRightHook = (props: { setDragOffset: (offset: number) => void; onDragStart: () => void }) => (
-  <Piece piece={PIECE_DEFINITIONS["right-hook"]} {...props} />
+type PieceRightHookProps = {
+  pieceName: PieceName;
+  setDragOffset: (offset: number) => void;
+  onDragStart: () => void;
+};
+
+const PieceRightHook = ({ pieceName, ...props }: PieceRightHookProps) => (
+  <Piece pieceName={pieceName} {...props} />
 );
 
 export default PieceRightHook;

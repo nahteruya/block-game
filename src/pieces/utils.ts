@@ -1,5 +1,5 @@
 // src/pieces/utils.ts
-import type { PieceDefinition } from './types';
+import type { PieceDefinition, PieceName, BasePieceName } from './types';
 
 export function getPieceIndices(
   baseIndex: number,
@@ -124,4 +124,38 @@ export function checkAndRemoveCompletedLines(
   }
   
   return newBoard;
+}
+
+// Função para rotacionar uma forma de peça
+export function rotateShape(shape: [number, number][], rotation: number): [number, number][] {
+  const rotations = rotation / 90;
+  let rotatedShape = [...shape];
+  
+  for (let i = 0; i < rotations; i++) {
+    rotatedShape = rotatedShape.map(([row, col]) => [-col, row]);
+  }
+  
+  // Normalizar para coordenadas não-negativas
+  const minRow = Math.min(...rotatedShape.map(([row]) => row));
+  const minCol = Math.min(...rotatedShape.map(([, col]) => col));
+  
+  return rotatedShape.map(([row, col]) => [row - minRow, col - minCol]);
+}
+
+// Função para calcular dimensões de uma forma rotacionada
+export function calculateRotatedDimensions(shape: [number, number][]): { width: number; height: number } {
+  const maxRow = Math.max(...shape.map(([row]) => row));
+  const maxCol = Math.max(...shape.map(([, col]) => col));
+  return { width: maxCol + 1, height: maxRow + 1 };
+}
+
+// Função para extrair o nome base de uma peça (sem rotação)
+export function getBasePieceName(pieceName: PieceName): BasePieceName {
+  return pieceName.split('-').slice(0, -1).join('-') as BasePieceName;
+}
+
+// Função para extrair a rotação de uma peça
+export function getPieceRotation(pieceName: PieceName): number {
+  const rotation = pieceName.split('-').pop();
+  return rotation ? parseInt(rotation) : 0;
 }

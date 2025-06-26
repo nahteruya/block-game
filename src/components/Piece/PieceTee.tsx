@@ -1,8 +1,14 @@
 import Piece from './Piece';
-import { PIECE_DEFINITIONS } from '@/pieces/definitions';
+import type { PieceName } from '@/pieces/types';
 
-const PieceTee = (props: { setDragOffset: (offset: number) => void; onDragStart: () => void }) => (
-  <Piece piece={PIECE_DEFINITIONS["tee"]} {...props} />
+type PieceTeeProps = {
+  pieceName: PieceName;
+  setDragOffset: (offset: number) => void;
+  onDragStart: () => void;
+};
+
+const PieceTee = ({ pieceName, ...props }: PieceTeeProps) => (
+  <Piece pieceName={pieceName} {...props} />
 );
 
 export default PieceTee; 

@@ -1,8 +1,14 @@
 import Piece from './Piece';
-import { PIECE_DEFINITIONS } from '@/pieces/definitions';
+import type { PieceName } from '@/pieces/types';
 
-const PieceLeftHook = (props: { setDragOffset: (offset: number) => void; onDragStart: () => void }) => (
-  <Piece piece={PIECE_DEFINITIONS["left-hook"]} {...props} />
+type PieceLeftHookProps = {
+  pieceName: PieceName;
+  setDragOffset: (offset: number) => void;
+  onDragStart: () => void;
+};
+
+const PieceLeftHook = ({ pieceName, ...props }: PieceLeftHookProps) => (
+  <Piece pieceName={pieceName} {...props} />
 );
 
 export default PieceLeftHook; 

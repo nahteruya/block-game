@@ -1,9 +1,15 @@
 // src/components/Piece/PieceLine.tsx
 import Piece from './Piece';
-import { PIECE_DEFINITIONS } from '@/pieces/definitions';
+import type { PieceName } from '@/pieces/types';
 
-const PieceLine = (props: { setDragOffset: (offset: number) => void; onDragStart: () => void }) => (
-  <Piece piece={PIECE_DEFINITIONS.line} {...props} />
+type PieceLineProps = {
+  pieceName: PieceName;
+  setDragOffset: (offset: number) => void;
+  onDragStart: () => void;
+};
+
+const PieceLine = ({ pieceName, ...props }: PieceLineProps) => (
+  <Piece pieceName={pieceName} {...props} />
 );
 
 export default PieceLine;

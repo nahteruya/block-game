@@ -1,9 +1,15 @@
 // src/components/Piece/PieceSquare.tsx
 import Piece from './Piece';
-import { PIECE_DEFINITIONS } from '@/pieces/definitions';
+import type { PieceName } from '@/pieces/types';
 
-const PieceSquare = (props: { setDragOffset: (offset: number) => void; onDragStart: () => void }) => (
-  <Piece piece={PIECE_DEFINITIONS.square} {...props} />
+type PieceSquareProps = {
+  pieceName: PieceName;
+  setDragOffset: (offset: number) => void;
+  onDragStart: () => void;
+};
+
+const PieceSquare = ({ pieceName, ...props }: PieceSquareProps) => (
+  <Piece pieceName={pieceName} {...props} />
 );
 
 export default PieceSquare;

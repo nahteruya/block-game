@@ -11,15 +11,22 @@ import PieceTee from "@/components/Piece/PieceTee";
 import PieceRightCurve from "@/components/Piece/PieceRightCurve";
 import PieceLeftCurve from "@/components/Piece/PieceLeftCurve";
 
-// Array com todos os tipos de peças disponíveis
+// Array com todos os tipos de peças disponíveis (incluindo todas as variações de rotação)
 const ALL_PIECE_TYPES: PieceName[] = [
-  'line',
-  'square',
-  'right-hook',
-  'left-hook',
-  'tee',
-  'right-curve',
-  'left-curve'
+  // Line variations
+  'line-0', 'line-90', 'line-180', 'line-270',
+  // Square variations
+  'square-0', 'square-90', 'square-180', 'square-270',
+  // Right-hook variations
+  'right-hook-0', 'right-hook-90', 'right-hook-180', 'right-hook-270',
+  // Left-hook variations
+  'left-hook-0', 'left-hook-90', 'left-hook-180', 'left-hook-270',
+  // Tee variations
+  'tee-0', 'tee-90', 'tee-180', 'tee-270',
+  // Right-curve variations
+  'right-curve-0', 'right-curve-90', 'right-curve-180', 'right-curve-270',
+  // Left-curve variations
+  'left-curve-0', 'left-curve-90', 'left-curve-180', 'left-curve-270'
 ];
 
 // Função para gerar 3 peças aleatórias
@@ -37,7 +44,15 @@ export default function Home() {
   const [availablePieces, setAvailablePieces] = useState<PieceName[]>([]);
 
   useEffect(() => {
-    setAvailablePieces(generateRandomPieces());
+    const initialPieces = generateRandomPieces();
+    
+    if (initialPieces.length === 3) {
+      setAvailablePieces(initialPieces);
+    } else {
+      // Fallback: garante que sempre tenhamos 3 peças
+      const fallbackPieces = ALL_PIECE_TYPES.slice(0, 3);
+      setAvailablePieces(fallbackPieces);
+    }
   }, []);
 
   const handleDragStart = (pieceType: PieceName) => setCurrentDragType(pieceType);
@@ -81,11 +96,11 @@ export default function Home() {
     if (usedPieceIndex !== -1) {
       // Gera uma nova peça que não está nas peças atuais
       const availableNewPieces = ALL_PIECE_TYPES.filter(type => !newPieces.includes(type));
-      if (availableNewPieces.length > 0) {
-        const randomNewPiece = availableNewPieces[Math.floor(Math.random() * availableNewPieces.length)];
-        newPieces[usedPieceIndex] = randomNewPiece;
-        setAvailablePieces(newPieces);
-      }
+      // Se não houver peças disponíveis, usa todas as peças (incluindo as que já estão na vitrine)
+      const piecesToChooseFrom = availableNewPieces.length > 0 ? availableNewPieces : ALL_PIECE_TYPES;
+      const randomNewPiece = piecesToChooseFrom[Math.floor(Math.random() * piecesToChooseFrom.length)];
+      newPieces[usedPieceIndex] = randomNewPiece;
+      setAvailablePieces(newPieces);
     }
   };
 
@@ -149,11 +164,15 @@ export default function Home() {
   // Função para renderizar uma peça baseada no tipo
   const renderPiece = (pieceType: PieceName) => {
     const props = {
+      pieceName: pieceType,
       setDragOffset,
       onDragStart: () => handleDragStart(pieceType)
     };
 
-    switch (pieceType) {
+    const parts = pieceType.split('-');
+    const baseType = parts.slice(0, -1).join('-');
+    
+    switch (baseType) {
       case 'line':
         return <PieceLine key={pieceType} {...props} />;
       case 'square':
@@ -179,19 +198,19 @@ export default function Home() {
       <div className="grid grid-cols-10 gap-1 bg-gray-800 p-2 rounded-lg">
         {board.map((cell, index) => {
           const baseColor =
-            cell === 'line'
+            cell === 'line-0' || cell === 'line-90' || cell === 'line-180' || cell === 'line-270'
               ? 'bg-blue-600'
-              : cell === 'square'
+              : cell === 'square-0' || cell === 'square-90' || cell === 'square-180' || cell === 'square-270'
               ? 'bg-yellow-500'
-              : cell === 'right-hook'
+              : cell === 'right-hook-0' || cell === 'right-hook-90' || cell === 'right-hook-180' || cell === 'right-hook-270'
               ? 'bg-teal-500'
-              : cell === 'left-hook'
+              : cell === 'left-hook-0' || cell === 'left-hook-90' || cell === 'left-hook-180' || cell === 'left-hook-270'
               ? 'bg-red-500'
-              : cell === 'tee'
+              : cell === 'tee-0' || cell === 'tee-90' || cell === 'tee-180' || cell === 'tee-270'
               ? 'bg-purple-500'
-              : cell === 'right-curve'
+              : cell === 'right-curve-0' || cell === 'right-curve-90' || cell === 'right-curve-180' || cell === 'right-curve-270'
               ? 'bg-indigo-500'
-              : cell === 'left-curve'
+              : cell === 'left-curve-0' || cell === 'left-curve-90' || cell === 'left-curve-180' || cell === 'left-curve-270'
               ? 'bg-pink-500'
               : getHoverColor(index);
           return (
@@ -210,11 +229,15 @@ export default function Home() {
           {availablePieces.length === 0 ? (
             <div>Carregando...</div>
           ) : (
-            availablePieces.map(pieceType => (
-              <div key={pieceType} className="w-40 h-40 flex items-center justify-center">
-                {renderPiece(pieceType)}
-              </div>
-            ))
+            // Garante que sempre renderizamos 3 slots
+            Array.from({ length: 3 }).map((_, index) => {
+              const pieceType = availablePieces[index];
+              return (
+                <div key={index} className="w-40 h-40 flex items-center justify-center">
+                  {pieceType ? renderPiece(pieceType) : <div>Carregando...</div>}
+                </div>
+              );
+            })
           )}
         </div>
       </div>
