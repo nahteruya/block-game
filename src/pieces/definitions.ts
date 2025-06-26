@@ -37,13 +37,16 @@ const PIECE_COLORS: Record<string, 'blue' | 'yellow' | 'teal' | 'green' | 'red' 
   'left-curve': 'pink'
 };
 
-// Função para gerar todas as variações de uma peça
-function generatePieceVariations(baseName: keyof typeof BASE_PIECE_SHAPES): Record<string, PieceDefinition> {
+// Função para gerar variações de uma peça com rotações específicas
+function generatePieceVariationsWithRotations(
+  baseName: keyof typeof BASE_PIECE_SHAPES, 
+  rotations: number[]
+): Record<string, PieceDefinition> {
   const baseShape = BASE_PIECE_SHAPES[baseName];
   const color = PIECE_COLORS[baseName];
   const variations: Record<string, PieceDefinition> = {};
   
-  [0, 90, 180, 270].forEach(rotation => {
+  rotations.forEach(rotation => {
     const rotatedShape = rotateShape(baseShape, rotation);
     const dimensions = calculateRotatedDimensions(rotatedShape);
     const pieceName = `${baseName}-${rotation}` as PieceName;
@@ -63,11 +66,14 @@ function generatePieceVariations(baseName: keyof typeof BASE_PIECE_SHAPES): Reco
 // Gerar todas as definições de peças com suas variações
 export const PIECE_DEFINITIONS: Record<PieceName, PieceDefinition> = Object.assign(
   {},
-  generatePieceVariations('line'),
-  generatePieceVariations('square'),
-  generatePieceVariations('right-hook'),
-  generatePieceVariations('left-hook'),
-  generatePieceVariations('tee'),
-  generatePieceVariations('right-curve'),
-  generatePieceVariations('left-curve'),
+  // Line: apenas 0° e 90° (180° e 270° são iguais)
+  generatePieceVariationsWithRotations('line', [0, 90]),
+  // Square: apenas 0° (todas as rotações são iguais)
+  generatePieceVariationsWithRotations('square', [0]),
+  // Outras peças: todas as rotações
+  generatePieceVariationsWithRotations('right-hook', [0, 90, 180, 270]),
+  generatePieceVariationsWithRotations('left-hook', [0, 90, 180, 270]),
+  generatePieceVariationsWithRotations('tee', [0, 90, 180, 270]),
+  generatePieceVariationsWithRotations('right-curve', [0, 90, 180, 270]),
+  generatePieceVariationsWithRotations('left-curve', [0, 90, 180, 270]),
 );

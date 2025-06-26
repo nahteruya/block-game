@@ -13,10 +13,10 @@ import PieceLeftCurve from "@/components/Piece/PieceLeftCurve";
 
 // Array com todos os tipos de peças disponíveis (incluindo todas as variações de rotação)
 const ALL_PIECE_TYPES: PieceName[] = [
-  // Line variations
-  'line-0', 'line-90', 'line-180', 'line-270',
-  // Square variations
-  'square-0', 'square-90', 'square-180', 'square-270',
+  // Line variations (only unique ones: 0° and 90°)
+  'line-0', 'line-90',
+  // Square variations (only one needed since all rotations are the same)
+  'square-0',
   // Right-hook variations
   'right-hook-0', 'right-hook-90', 'right-hook-180', 'right-hook-270',
   // Left-hook variations
@@ -198,9 +198,9 @@ export default function Home() {
       <div className="grid grid-cols-10 gap-1 bg-gray-800 p-2 rounded-lg">
         {board.map((cell, index) => {
           const baseColor =
-            cell === 'line-0' || cell === 'line-90' || cell === 'line-180' || cell === 'line-270'
+            cell === 'line-0' || cell === 'line-90'
               ? 'bg-blue-600'
-              : cell === 'square-0' || cell === 'square-90' || cell === 'square-180' || cell === 'square-270'
+              : cell === 'square-0'
               ? 'bg-yellow-500'
               : cell === 'right-hook-0' || cell === 'right-hook-90' || cell === 'right-hook-180' || cell === 'right-hook-270'
               ? 'bg-teal-500'

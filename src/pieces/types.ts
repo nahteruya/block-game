@@ -1,8 +1,8 @@
 export type PieceName = 
-  // Line variations
-  | 'line-0' | 'line-90' | 'line-180' | 'line-270'
-  // Square variations (square is the same in all rotations)
-  | 'square-0' | 'square-90' | 'square-180' | 'square-270'
+  // Line variations (only unique ones: 0° and 90°)
+  | 'line-0' | 'line-90'
+  // Square variations (only one needed since all rotations are the same)
+  | 'square-0'
   // Right-hook variations
   | 'right-hook-0' | 'right-hook-90' | 'right-hook-180' | 'right-hook-270'
   // Left-hook variations
