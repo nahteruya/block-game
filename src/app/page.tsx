@@ -35,6 +35,32 @@ const generateRandomPieces = (): PieceName[] => {
   return shuffled.slice(0, 3);
 };
 
+// Função para verificar se uma peça pode ser colocada em algum lugar do tabuleiro
+const canPlacePiece = (pieceType: PieceName, board: (string | null)[], boardWidth: number, boardHeight: number): boolean => {
+  const piece = PIECE_DEFINITIONS[pieceType];
+  if (!piece) return false;
+
+  // Verifica todas as posições possíveis no tabuleiro
+  for (let row = 0; row < boardHeight; row++) {
+    for (let col = 0; col < boardWidth; col++) {
+      const baseIndex = row * boardWidth + col;
+      
+      // Verifica se a peça cabe nesta posição
+      if (!isOutOfBounds(baseIndex, piece, boardWidth, boardHeight)) {
+        const pieceIndices = getPieceIndices(baseIndex, piece, boardWidth);
+        const hasCollision = pieceIndices.some(i => board[i] !== null);
+        
+        // Se não há colisão, a peça pode ser colocada
+        if (!hasCollision) {
+          return true;
+        }
+      }
+    }
+  }
+  
+  return false;
+};
+
 export default function Home() {
   const [board, setBoard] = useState(Array(100).fill(null));
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
@@ -43,6 +69,20 @@ export default function Home() {
   const [currentDragType, setCurrentDragType] = useState<PieceName | null>(null);
   const [availablePieces, setAvailablePieces] = useState<PieceName[]>([]);
   const [score, setScore] = useState<number>(0);
+  const [disabledPieces, setDisabledPieces] = useState<Set<PieceName>>(new Set());
+
+  // Função para verificar e atualizar o estado das peças desativadas
+  const updateDisabledPieces = (currentBoard: (string | null)[], currentPieces: PieceName[]) => {
+    const newDisabledPieces = new Set<PieceName>();
+    
+    currentPieces.forEach(pieceType => {
+      if (!canPlacePiece(pieceType, currentBoard, 10, 10)) {
+        newDisabledPieces.add(pieceType);
+      }
+    });
+    
+    setDisabledPieces(newDisabledPieces);
+  };
 
   useEffect(() => {
     const initialPieces = generateRandomPieces();
@@ -56,7 +96,17 @@ export default function Home() {
     }
   }, []);
 
-  const handleDragStart = (pieceType: PieceName) => setCurrentDragType(pieceType);
+  // Verifica a disponibilidade das peças sempre que o tabuleiro ou as peças mudam
+  useEffect(() => {
+    updateDisabledPieces(board, availablePieces);
+  }, [board, availablePieces]);
+
+  const handleDragStart = (pieceType: PieceName) => {
+    // Só permite arrastar se a peça não estiver desativada
+    if (!disabledPieces.has(pieceType)) {
+      setCurrentDragType(pieceType);
+    }
+  };
 
   const handleDragEnd = () => {
     setCurrentDragType(null);
@@ -168,10 +218,13 @@ export default function Home() {
 
   // Função para renderizar uma peça baseada no tipo
   const renderPiece = (pieceType: PieceName) => {
+    const isDisabled = disabledPieces.has(pieceType);
+    
     const props = {
       pieceName: pieceType,
       setDragOffset,
-      onDragStart: () => handleDragStart(pieceType)
+      onDragStart: () => handleDragStart(pieceType),
+      isDisabled
     };
 
     const parts = pieceType.split('-');

@@ -5,6 +5,7 @@ type PieceLeftHookProps = {
   pieceName: PieceName;
   setDragOffset: (offset: number) => void;
   onDragStart: () => void;
+  isDisabled?: boolean;
 };
 
 const PieceLeftHook = ({ pieceName, ...props }: PieceLeftHookProps) => (

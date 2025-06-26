@@ -5,6 +5,7 @@ type PieceLeftCurveProps = {
   pieceName: PieceName;
   setDragOffset: (offset: number) => void;
   onDragStart: () => void;
+  isDisabled?: boolean;
 };
 
 const PieceLeftCurve = ({ pieceName, ...props }: PieceLeftCurveProps) => (

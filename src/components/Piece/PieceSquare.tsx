@@ -6,6 +6,7 @@ type PieceSquareProps = {
   pieceName: PieceName;
   setDragOffset: (offset: number) => void;
   onDragStart: () => void;
+  isDisabled?: boolean;
 };
 
 const PieceSquare = ({ pieceName, ...props }: PieceSquareProps) => (

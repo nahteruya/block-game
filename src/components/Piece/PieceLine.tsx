@@ -6,6 +6,7 @@ type PieceLineProps = {
   pieceName: PieceName;
   setDragOffset: (offset: number) => void;
   onDragStart: () => void;
+  isDisabled?: boolean;
 };
 
 const PieceLine = ({ pieceName, ...props }: PieceLineProps) => (

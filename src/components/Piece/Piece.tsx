@@ -6,6 +6,7 @@ type PieceProps = {
   pieceName: PieceName;
   setDragOffset: (offset: number) => void;
   onDragStart: () => void;
+  isDisabled?: boolean;
 };
 
 const mapColor: Record<PieceColor, string> = {
@@ -19,7 +20,7 @@ const mapColor: Record<PieceColor, string> = {
   pink: 'bg-pink-500',
 }
 
-const Piece = ({ pieceName, setDragOffset, onDragStart }: PieceProps) => {
+const Piece = ({ pieceName, setDragOffset, onDragStart, isDisabled = false }: PieceProps) => {
   const piece = PIECE_DEFINITIONS[pieceName];
   
   if (!piece) {
@@ -27,6 +28,11 @@ const Piece = ({ pieceName, setDragOffset, onDragStart }: PieceProps) => {
   }
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    if (isDisabled) {
+      e.preventDefault();
+      return;
+    }
+    
     const blockSize = 32 + 4;
     const offsetX = e.nativeEvent.offsetX;
     const offsetY = e.nativeEvent.offsetY;
@@ -45,10 +51,16 @@ const Piece = ({ pieceName, setDragOffset, onDragStart }: PieceProps) => {
     4: "grid-cols-4",
   }[piece.width];
 
+  const containerClasses = `grid ${gridColsClass} gap-1 p-2 ${
+    isDisabled 
+      ? 'cursor-not-allowed opacity-50 grayscale' 
+      : 'cursor-grab'
+  }`;
+
   return (
     <div
-      className={`grid ${gridColsClass} gap-1 p-2 cursor-grab`}
-      draggable
+      className={containerClasses}
+      draggable={!isDisabled}
       onDragStart={handleDragStart}
     >
       {Array.from({ length: piece.height }).map((_, row) =>
