@@ -42,6 +42,7 @@ export default function Home() {
   const [hoverPieceType, setHoverPieceType] = useState<PieceName | null>(null);
   const [currentDragType, setCurrentDragType] = useState<PieceName | null>(null);
   const [availablePieces, setAvailablePieces] = useState<PieceName[]>([]);
+  const [score, setScore] = useState<number>(0);
 
   useEffect(() => {
     const initialPieces = generateRandomPieces();
@@ -88,6 +89,10 @@ export default function Home() {
     const updatedBoard = checkAndRemoveCompletedLines(newBoard, 10, 10);
     
     setBoard(updatedBoard);
+    
+    // Adiciona 4 pontos pela peça colocada
+    setScore(prevScore => prevScore + 4);
+    
     handleDragEnd();
     
     // Substitui a peça usada por uma nova peça aleatória
@@ -195,6 +200,9 @@ export default function Home() {
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold mb-8">Tetris</h1>
+      <div className="text-2xl font-semibold mb-4 text-white">
+        Pontuação: {score}
+      </div>
       <div className="grid grid-cols-10 gap-1 bg-gray-800 p-2 rounded-lg">
         {board.map((cell, index) => {
           const baseColor =
