@@ -98,15 +98,18 @@ export function checkAndRemoveCompletedLines(
   board: (string | null)[],
   boardWidth: number,
   boardHeight: number
-): (string | null)[] {
+): { board: (string | null)[]; completedLines: number; completedColumns: number } {
   let newBoard = [...board];
   let hasChanges = false;
+  let completedLines = 0;
+  let completedColumns = 0;
   
   // Verifica e remove linhas completas (de baixo para cima)
   for (let row = boardHeight - 1; row >= 0; row--) {
     if (isLineComplete(newBoard, row, boardWidth)) {
       newBoard = removeLine(newBoard, row, boardWidth, boardHeight);
       hasChanges = true;
+      completedLines++;
     }
   }
   
@@ -115,15 +118,21 @@ export function checkAndRemoveCompletedLines(
     if (isColumnComplete(newBoard, col, boardWidth, boardHeight)) {
       newBoard = removeColumn(newBoard, col, boardWidth, boardHeight);
       hasChanges = true;
+      completedColumns++;
     }
   }
   
   // Se houve mudanças, verifica novamente (pode haver novas linhas/colunas completas)
   if (hasChanges) {
-    return checkAndRemoveCompletedLines(newBoard, boardWidth, boardHeight);
+    const recursiveResult = checkAndRemoveCompletedLines(newBoard, boardWidth, boardHeight);
+    return {
+      board: recursiveResult.board,
+      completedLines: completedLines + recursiveResult.completedLines,
+      completedColumns: completedColumns + recursiveResult.completedColumns
+    };
   }
   
-  return newBoard;
+  return { board: newBoard, completedLines, completedColumns };
 }
 
 // Função para rotacionar uma forma de peça

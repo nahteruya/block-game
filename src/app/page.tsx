@@ -136,12 +136,20 @@ export default function Home() {
     pieceIndices.forEach(i => { newBoard[i] = pieceType; });
     
     // Verifica e remove linhas/colunas completas
-    const updatedBoard = checkAndRemoveCompletedLines(newBoard, 10, 10);
+    const result = checkAndRemoveCompletedLines(newBoard, 10, 10);
     
-    setBoard(updatedBoard);
+    setBoard(result.board);
     
     // Adiciona 4 pontos pela peça colocada
-    setScore(prevScore => prevScore + 4);
+    let pointsToAdd = 4;
+    
+    // Adiciona 10 pontos por cada linha completada
+    pointsToAdd += result.completedLines * 10;
+    
+    // Adiciona 10 pontos por cada coluna completada
+    pointsToAdd += result.completedColumns * 10;
+    
+    setScore(prevScore => prevScore + pointsToAdd);
     
     handleDragEnd();
     
